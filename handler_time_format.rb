@@ -11,9 +11,9 @@ class HandlerTimeFormat < HandlerBase
     'second' => '%S'
   }.freeze
 
-  def initialize(**options)
-    super(**options)
-    @request_format = options[format]
+  def initialize(format)
+    super(format)
+    @request_format = format
     validate_formats
   end
 
@@ -31,6 +31,8 @@ class HandlerTimeFormat < HandlerBase
 
   private
 
+  ##
+  # check incoming formats and save wrong set
   def validate_formats
     @not_support_formats = @request_format.split(',') - SUPPORT_FORMATS.keys
   end

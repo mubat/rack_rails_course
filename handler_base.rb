@@ -5,7 +5,7 @@
 # All handlers should be extended from this class
 class HandlerBase
 
-  def initialize(**options); end
+  def initialize(*options); end
 
   ##
   # Handle and return response data.
