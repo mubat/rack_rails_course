@@ -1,33 +1,32 @@
 # frozen_string_literal: true
 
 require 'cgi'
+require_relative 'time_format'
 
 class App
-  SUPPORT_FORMATS = {
-    'year' => '%Y',
-    'month' => '%m',
-    'day' => '%d',
-    'hour' => '%H',
-    'minute' => '%M',
-    'second' => '%S'
-  }.freeze
+  def initialize
+    @handlers = { '/time': TimeFormat }
+  end
 
   def call(env)
-    @env = env
-    parse
-    validate_formats
-    @status = status
-    @headers = headers
-    @body = body
-    [@status, @headers, @body]
+    @request = Rack::Request.new(env)
+    process
+    response = Rack::Response.new(body, status, headers)
+    response.finish
   end
 
   private
 
-  def status
-    return 400 if errors?
+  def process
+    return unless @handlers.key?(@request.path.to_sym)
 
-    @env['REQUEST_PATH'] == '/time' ? 200 : 404
+    @handler = @handlers[@request.path.to_sym].new(@request.params['format'])
+  end
+
+  def status
+    return 404 unless @handlers.key?(@request.path.to_sym)
+
+    @handler.errors? ? 400 : 200
   end
 
   def headers
@@ -35,28 +34,9 @@ class App
   end
 
   def body
-    return ["Unknown time format [#{@not_support_formats.join(', ')}]\n"] if errors?
-    return [] unless @status == 200
+    return unless @handlers.key?(@request.path.to_sym)
+    return @handler.errors if @handler.errors?
 
-    ["#{Time.now.strftime(format)}\n"]
-  end
-
-  def parse
-    @params = CGI.parse(@env['QUERY_STRING'])
-    @request_format = @params['format'][0]
-  end
-
-  def validate_formats
-    @not_support_formats = @request_format.split(',') - SUPPORT_FORMATS.keys
-  end
-
-  def errors?
-    !@not_support_formats.empty?
-  end
-
-  def format
-    format = @request_format.split(',')
-    format.map! { |t| t = SUPPORT_FORMATS[t] }
-    format.join('-')
+    @handler.handle
   end
 end
