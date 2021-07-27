@@ -1,4 +1,6 @@
-class TimeFormat
+require_relative 'handler_base'
+
+class HandlerTimeFormat < HandlerBase
 
   SUPPORT_FORMATS = {
     'year' => '%Y',
@@ -9,12 +11,13 @@ class TimeFormat
     'second' => '%S'
   }.freeze
 
-  def initialize(format)
-    @request_format = format
+  def initialize(**options)
+    super(**options)
+    @request_format = options[format]
     validate_formats
   end
 
-  def handle
+  def prepare_response
     ["#{Time.now.strftime(format)}\n"]
   end
 
