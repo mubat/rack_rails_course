@@ -17,7 +17,7 @@ class HandlerTimeFormat < HandlerBase
     validate_formats
   end
 
-  def prepare_response
+  def prepare_result
     ["#{Time.now.strftime(format)}\n"]
   end
 

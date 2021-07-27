@@ -9,7 +9,8 @@ class HandlerBase
 
   ##
   # Handle and return response data.
-  def prepare_response
+  # Main method of all handler logic. It makes main things
+  def prepare_result
     raise 'Method should implemented in inherit class'
   end
 
