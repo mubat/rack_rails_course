@@ -13,7 +13,7 @@ class HandlerTimeFormat < HandlerBase
 
   def initialize(format)
     super(format)
-    @request_format = format
+    @request_format = format.split(',')
     validate_formats
   end
 
@@ -34,13 +34,11 @@ class HandlerTimeFormat < HandlerBase
   ##
   # check incoming formats and save wrong set
   def validate_formats
-    @not_support_formats = @request_format.split(',') - SUPPORT_FORMATS.keys
+    @not_support_formats = @request_format - SUPPORT_FORMATS.keys
   end
 
   def format
-    format = @request_format.split(',')
-    format.map! { |t| t = SUPPORT_FORMATS[t] }
-    format.join('-')
+    @request_format.map { |t| t = SUPPORT_FORMATS[t] }.join('-')
   end
 
 end
