@@ -20,16 +20,19 @@ class App
     request = Rack::Request.new(env)
     return response(404) unless @handlers.key?(request.path.to_sym)
 
-    handler = @handlers[request.path.to_sym].new(request.params['format'])
-    return response(400, handler.errors) if handler.errors?
-
-    response(body: handler.prepare_result)
-
+    process_call(@handlers[request.path.to_sym].new(request.params['format']))
   end
 
   private
 
-  def response(status = 200, body = nil, headers = { 'Content-Type' => 'text/plain' })
+  def process_call(handler)
+    handler.handle
+    return response(400, handler.errors) unless handler.valid?
+
+    response(200, handler.result)
+  end
+
+  def response(status = 200, body = [], headers = { 'Content-Type' => 'text/plain' })
     Rack::Response.new(body, status, headers).finish
   end
 end

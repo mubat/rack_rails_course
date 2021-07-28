@@ -14,28 +14,22 @@ class HandlerTimeFormat < HandlerBase
   def initialize(format)
     super(format)
     @request_format = format.split(',')
-    validate_formats
   end
 
-  def prepare_result
-    ["#{Time.now.strftime(format)}\n"]
-  end
+  def handle
+    return unless valid?
 
-  def errors?
-    !@not_support_formats.empty?
+    @result = "#{Time.now.strftime(format)}\n"
   end
 
   def errors
-    ["Unknown time format [#{@not_support_formats.join(', ')}]\n"] unless @not_support_formats.empty?
+    @errors = []
+
+    not_support_formats = @request_format - SUPPORT_FORMATS.keys
+    @errors << "Unknown time format [#{not_support_formats.join(', ')}]\n" unless not_support_formats.empty?
   end
 
   private
-
-  ##
-  # check incoming formats and save wrong set
-  def validate_formats
-    @not_support_formats = @request_format - SUPPORT_FORMATS.keys
-  end
 
   def format
     @request_format.map { |t| t = SUPPORT_FORMATS[t] }.join('-')

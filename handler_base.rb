@@ -5,19 +5,25 @@
 # All handlers should be extended from this class
 class HandlerBase
 
-  def initialize(*options); end
+  attr_reader :result
+
+  def initialize(*)
+    @result = nil
+    @errors = []
+  end
 
   ##
   # Handle and return response data.
   # Main method of all handler logic. It makes main things
-  def prepare_result
+  # return boolean result of handling data. Errors you can see by calling `errors` method
+  def handle
     raise 'Method should implemented in inherit class'
   end
 
   ##
   # Check is current state has errors
-  def errors?
-    errors.nil?
+  def valid?
+    @errors.empty?
   end
 
   ##
