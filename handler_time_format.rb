@@ -17,12 +17,13 @@ class HandlerTimeFormat < HandlerBase
   end
 
   def handle
+    validate
     return unless valid?
 
     @result = "#{Time.now.strftime(format)}\n"
   end
 
-  def errors
+  def validate
     @errors = []
 
     not_support_formats = @request_format - SUPPORT_FORMATS.keys

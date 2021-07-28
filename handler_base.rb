@@ -5,7 +5,7 @@
 # All handlers should be extended from this class
 class HandlerBase
 
-  attr_reader :result
+  attr_reader :result, errors
 
   def initialize(*)
     @result = nil
