@@ -18,7 +18,7 @@ class HandlerTimeFormat < HandlerBase
 
   def handle
     validate
-    return unless valid?
+    return if invalid?
 
     @result = "#{Time.now.strftime(format)}\n"
   end

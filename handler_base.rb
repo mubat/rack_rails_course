@@ -20,8 +20,8 @@ class HandlerBase
 
   ##
   # Check is current state has errors
-  def valid?
-    @errors.empty?
+  def invalid?
+    !@errors.empty?
   end
 
   ##

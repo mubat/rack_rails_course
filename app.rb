@@ -25,7 +25,7 @@ class App
 
   def process_call(handler)
     handler.handle
-    return response(400, handler.errors) unless handler.valid?
+    return response(400, handler.errors) if handler.invalid?
 
     response(200, handler.result)
   end
