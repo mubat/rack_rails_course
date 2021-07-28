@@ -1,7 +1,5 @@
-# frozen_string_literal: true
 
 require 'cgi'
-require 'pry'
 require_relative 'handler_time_format'
 
 class App

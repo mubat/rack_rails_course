@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # Base class for all Handlers.
 # Describes common methods that use to execute handler
 # All handlers should be extended from this class
