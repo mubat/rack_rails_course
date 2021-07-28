@@ -20,7 +20,7 @@ class HandlerTimeFormat < HandlerBase
     validate
     return if invalid?
 
-    @result = "#{Time.now.strftime(format)}\n"
+    @result = "#{Time.now.strftime(convert_to_time_format)}\n"
   end
 
   def validate
@@ -32,7 +32,7 @@ class HandlerTimeFormat < HandlerBase
 
   private
 
-  def format
+  def convert_to_time_format
     @request_format.map { |t| t = SUPPORT_FORMATS[t] }.join('-')
   end
 
